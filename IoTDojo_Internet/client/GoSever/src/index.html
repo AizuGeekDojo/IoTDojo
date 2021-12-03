@@ -1,0 +1,21 @@
+<html>
+    <body>
+        <p id="main">
+        </p>
+        <script>
+            setInterval(()=>{
+            fetch("/getData").then(
+                (res)=>{
+                    return(res.text())
+                }
+            ).then(
+                (text)=>{
+                    let txt=text.replace(/\r?\n/g,'<br>')
+                    console.log(txt)
+                    document.getElementById("main").innerHTML=txt
+                }
+            )
+            },1000)
+        </script>
+    </body>
+</html>
