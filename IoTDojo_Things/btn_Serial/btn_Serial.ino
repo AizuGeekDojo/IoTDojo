@@ -1,4 +1,4 @@
-#define BTN 4
+#define BTN 32
 #define LED 5
 
 void setup() {
