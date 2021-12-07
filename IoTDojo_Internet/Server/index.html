@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Dojo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- header -->
+    <header>
+      <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+          <div class="navbar-brand d-flex align-items-center">
+            <strong>IoT Dojo</strong>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+
+      <section>
+        <div class="text-center">
+          <p class="led-state">
+            現在の状態: 点灯
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h3>Lチカボタン</h3>
+        <br>
+        <div class="row">
+          <div class="text-center">
+            <button class="btn btn-primary" onclick="on()">点灯</button>
+            <button class="btn btn-danger" onclick="off()">消灯</button>
+          </div>
+        </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </body>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</html>
+
+<style>
+  main {
+    padding-top: 50px;
+  }
+
+  h3 {
+    padding: 1rem 2rem;
+    border-left: 5px solid #000;
+    background: #f4f4f4;
+  }
+
+  button {
+    width: 120px;
+    height: 80px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    margin-left: 20px;
+    font-size: 1.5rem !important;
+  }
+
+  .led-state {
+    font-size: 1.8rem;
+  }
+</style>
+
+<script>
+
+  const baseUrl = 'http://localhost:3000';
+  const LEDStatePath = '/state';
+  const changeLEDPath = 'change';
+
+  const post = (path, body) => {
+    axios.post(baseUrl + path, body)
+      .then(function (response) {
+        console.log(response);
+        alert(`リクエストに成功しました`);
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert(`リクエストに失敗しました`);
+      });
+  }
+
+  const get = async (path) => {
+    try {
+      return await axios.get(baseUrl + path);
+    } catch (error) {
+      console.log(error);
+      alert(`リクエストに失敗しました`);
+      return 0;
+    }
+  }
+
+  const on = () => {
+    post(changeLEDPath, { state: 'on' });
+  }
+
+  const off = () => {
+    post(changeLEDPath, { state: 'off' });
+  }
+
+  const updateLEDState = (state) => {
+    const ledState = document.querySelector('.led-state');
+    ledState.innerText = `現在の状態: ${state}`;
+  }
+
+  const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  const LEDState = async () => {
+    while (1) {
+      const res = await get(LEDStatePath);
+      if (res == 0) {
+        alert("ページをリロードしてください");
+        return;
+      }
+      const state = res.data.state;
+      updateLEDState(state);
+      await sleep(5000);
+    }
+  }
+  LEDState();
+
+</script>
