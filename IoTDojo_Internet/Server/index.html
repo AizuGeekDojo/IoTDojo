@@ -81,12 +81,13 @@
 
 <script>
 
-  const baseUrl = 'http://localhost:3000';
   const LEDStatePath = '/state';
-  const changeLEDPath = 'change';
+  const changeLEDPath = '/change';
 
   const post = (path, body) => {
-    axios.post(baseUrl + path, body)
+    axios.post(path, body,{
+      headers: {'Content-Type':'text/plain'}
+    })
       .then(function (response) {
         console.log(response);
         alert(`リクエストに成功しました`);
@@ -99,7 +100,7 @@
 
   const get = async (path) => {
     try {
-      return await axios.get(baseUrl + path);
+      return await axios.get(path);
     } catch (error) {
       console.log(error);
       alert(`リクエストに失敗しました`);
@@ -108,11 +109,11 @@
   }
 
   const on = () => {
-    post(changeLEDPath, { state: 'on' });
+    post(changeLEDPath,'on');
   }
 
   const off = () => {
-    post(changeLEDPath, { state: 'off' });
+    post(changeLEDPath,'off');
   }
 
   const updateLEDState = (state) => {
