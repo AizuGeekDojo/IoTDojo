@@ -85,35 +85,40 @@
   const changeLEDPath = '/change';
 
   const post = (path, body) => {
-    axios.post(path, body,{
-      headers: {'Content-Type':'text/plain'}
-    })
-      .then(function (response) {
-        console.log(response);
-        alert(`リクエストに成功しました`);
-      })
-      .catch(function (error) {
-        console.log(error);
-        alert(`リクエストに失敗しました`);
-      });
+    const request = new XMLHttpRequest();
+    request.open('POST', path, false);
+    request.setRequestHeader("Content-Type", "text/plain");
+
+    request.send(body);
+
+    if (request.status === 200) {
+      alert('リクエストに成功しました');
+      return JSON.parse(request.responseText);
+    } else {
+      alert('リクエストに失敗しました');
+      return 0;
+    }
   }
 
-  const get = async (path) => {
-    try {
-      return await axios.get(path);
-    } catch (error) {
-      console.log(error);
-      alert(`リクエストに失敗しました`);
+  const get = (path) => {
+    const request = new XMLHttpRequest();
+    request.open('GET', path, false);
+    request.send(null);
+
+    if (request.status === 200) {
+      return JSON.parse(request.responseText);
+    } else {
+      alert('リクエストに失敗しました');
       return 0;
     }
   }
 
   const on = () => {
-    post(changeLEDPath,'on');
+    post(changeLEDPath, 'on');
   }
 
   const off = () => {
-    post(changeLEDPath,'off');
+    post(changeLEDPath, 'off');
   }
 
   const updateLEDState = (state) => {
@@ -121,22 +126,15 @@
     ledState.innerText = `現在の状態: ${state}`;
   }
 
-  const sleep = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  const LEDState = async () => {
-    while (1) {
-      const res = await get(LEDStatePath);
-      if (res == 0) {
-        alert("ページをリロードしてください");
-        return;
-      }
-      const state = res.data.state;
-      updateLEDState(state);
-      await sleep(5000);
+  const LEDState = () => {
+    const res = get(LEDStatePath);
+    if (res == 0) {
+      alert("ページをリロードしてください");
+      return;
     }
+    const state = res.state;
+    updateLEDState(state);
   }
-  LEDState();
+  setInterval(() => LEDState(), 5000);
 
 </script>
