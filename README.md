@@ -126,6 +126,6 @@ LEDをじょじょに明るくしたり、暗くしたりする
 
 ## スライドは以下を参照
 
-ダミー
-
+[IoTDojo Things編](https://docs.google.com/presentation/d/1JS-oxG0eDSsEBJlCSfgKwuFwBgofehyfCaODZOZSojU/edit?usp=sharing)  
+[IoTDojo Internet編](https://docs.google.com/presentation/d/1p7NkKNRmOBm9MeIX_MDrqPcki5ktiqoi7-hBQ6IcLKo/edit?usp=sharing)
 ## 他にも案があれば、Issueにどうぞ
